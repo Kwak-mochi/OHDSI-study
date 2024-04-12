@@ -1,0 +1,11 @@
+--이 단계는 추출된 Cohort로 부터 baseline characteristic talbe을 그리기 위한 단계입니다.
+
+--0.preparation단계의 테이블이 우선 생성 되어있어야 합니다.
+--이 단계에서 각 테이블결과는 따로 저장됩니다.
+--t01.csv
+--t02.csv → Python을 통해 t02_cci.csv를 생성
+--t03.csv 
+--t04.csv (cdm_qsofa, cdm_antibiotics 필요)
+--t05.csv (cdm_vital 필요)
+--t06.csv (cdm_lab 필요)
+--t07.csv
