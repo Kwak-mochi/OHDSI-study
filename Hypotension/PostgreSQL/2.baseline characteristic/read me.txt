@@ -6,6 +6,7 @@
 --t02.csv → Python을 통해 t02_cci.csv를 생성
 --t03.csv 
 --t04.csv (cdm_qsofa, cdm_antibiotics 필요)
---t05.csv (cdm_vital 필요)
---t06.csv (cdm_lab 필요)
---t07.csv
+--t05.csv
+--t06.csv (cdm_vital 필요)
+--t07.csv (cdm_lab 필요)
+--t08.csv

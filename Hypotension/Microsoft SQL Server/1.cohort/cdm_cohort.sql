@@ -8,54 +8,79 @@
 --4171047 : IV
 
 CREATE TABLE cdm_t1 AS
-SELECT aa.*
+SELECT DISTINCT
+    aa.*
 FROM
-    (SELECT a.person_id,
+    (
+        SELECT DISTINCT
+            a.person_id,
             a.visit_occurrence_id,
             a.VISIT_START_DATETIME,
             a.VISIT_END_DATETIME,
+            a.VISIT_START_DATE,
+            a.VISIT_END_DATE,
             b.measurement_datetime,
             c.drug_exposure_start_datetime,
+            c.drug_exposure_start_date,
             c.drug_concept_id,
             c.drug_source_value,
             RANK() OVER (PARTITION BY a.person_id ORDER BY c.drug_exposure_start_datetime, b.measurement_datetime) AS rank
-     FROM (SELECT person_id,
-                  visit_occurrence_id,
-                  VISIT_START_DATETIME,
-                  VISIT_END_DATETIME
-           FROM CDM_2021.origin_VISIT_occurrence
-           WHERE visit_concept_id = '9201') a
-          JOIN (SELECT person_id,
-                       visit_occurrence_id,
-                       measurement_datetime
-                FROM CDM_2021.origin_MEASUREMENT
-                WHERE MEASUREMENT_CONCEPT_ID = '3020891'
-                  AND VALUE_AS_NUMBER > 37.1) b ON a.VISIT_OCCURRENCE_ID = b.VISIT_OCCURRENCE_ID
-                                                  AND a.VISIT_START_DATETIME < b.measurement_datetime
-                                                  AND b.measurement_datetime < a.VISIT_END_DATETIME
-          JOIN (SELECT person_id,
-                       visit_occurrence_id,
-                       drug_exposure_start_datetime,
-                       drug_concept_id,
-                       drug_source_value
-                FROM CDM_2021.origin_DRUG_EXPOSURE
-                WHERE ROUTE_CONCEPT_ID = '4171047'
-                  AND stop_reason IS NULL
-                  AND drug_exposure_start_datetime > '2011-12-31'
-                  AND drug_concept_id IN ('19112656',
-                                           '21035250',
-                                           '43291914',
-                                           '2028218',
-                                           '2028220')) c ON b.VISIT_OCCURRENCE_ID = c.VISIT_OCCURRENCE_ID
-                                                              AND b.measurement_datetime < c.drug_exposure_start_datetime
-                                                              AND c.drug_exposure_start_datetime - b.measurement_datetime < '06:00:00') aa
-          JOIN cdm_2021.origin_person bb ON aa.PERSON_ID = bb.person_id
-                                          AND DATEPART(year, aa.drug_exposure_start_datetime) - bb.year_of_birth > 19
-          JOIN cdm_vital cc ON aa.VISIT_OCCURRENCE_ID = cc.VISIT_OCCURRENCE_ID
-                             AND aa.drug_exposure_start_datetime < cc.measurement_datetime
-                             AND cc.measurement_datetime - aa.drug_exposure_start_datetime < '06:00:00'
-                             AND (cc.mbp IS NOT NULL OR cc.sbp IS NOT NULL)
-WHERE aa.rank = 1;
+        FROM
+            (
+                SELECT
+                    person_id,
+                    visit_occurrence_id,
+                    VISIT_START_DATETIME,
+                    VISIT_END_DATETIME,
+                    VISIT_START_DATE,
+                    VISIT_END_DATE
+                FROM
+                    CDM_2021.origin_VISIT_occurrence
+                WHERE
+                    visit_concept_id = '9201'
+            ) a
+            JOIN (
+                SELECT
+                    person_id,
+                    visit_occurrence_id,
+                    measurement_datetime
+                FROM
+                    CDM_2021.origin_MEASUREMENT
+                WHERE
+                    MEASUREMENT_CONCEPT_ID = '3020891'
+                    AND VALUE_AS_NUMBER > 37.1
+            ) b ON a.VISIT_OCCURRENCE_ID = b.VISIT_OCCURRENCE_ID
+            AND a.VISIT_START_DATETIME < b.measurement_datetime
+            AND b.measurement_datetime < a.VISIT_END_DATETIME
+            JOIN (
+                SELECT
+                    person_id,
+                    visit_occurrence_id,
+                    drug_exposure_start_datetime,
+                    drug_exposure_start_date,
+                    drug_concept_id,
+                    drug_source_value
+                FROM
+                    CDM_2021.origin_DRUG_EXPOSURE
+                WHERE
+                    ROUTE_CONCEPT_ID = '4171047'
+                    AND stop_reason IS NULL
+                    AND drug_exposure_start_datetime > '2011-12-31'
+                    AND drug_concept_id IN ('19112656', '21035250', '43291914', '2028218', '2028220')
+            ) c ON b.VISIT_OCCURRENCE_ID = c.VISIT_OCCURRENCE_ID
+            AND b.measurement_datetime < c.drug_exposure_start_datetime
+            AND c.drug_exposure_start_datetime - b.measurement_datetime < '06:00:00'
+    ) aa
+    JOIN cdm_2021.origin_person bb ON aa.PERSON_ID = bb.person_id
+    AND YEAR(aa.drug_exposure_start_datetime) - bb.year_of_birth > 19
+    JOIN cdm_vital cc ON aa.VISIT_OCCURRENCE_ID = cc.VISIT_OCCURRENCE_ID
+    AND aa.drug_exposure_start_datetime < cc.measurement_datetime
+    AND cc.measurement_datetime - aa.drug_exposure_start_datetime < '06:00:00'
+    AND (cc.mbp IS NOT NULL OR cc.sbp IS NOT NULL)
+WHERE
+    aa.rank = 1
+    AND DATEDIFF(day, aa.VISIT_START_DATE, aa.VISIT_END_DATE) <= 90
+    AND DATEDIFF(day, aa.VISIT_START_DATE, aa.drug_exposure_start_date) <= 7;
 
 -- cdm_t2 테이블 생성
 --concept id

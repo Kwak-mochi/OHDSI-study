@@ -10,13 +10,13 @@
 create table cdm_t1 as (
     select distinct aa.* from
     (
-        select distinct a.person_id, a.visit_occurrence_id, a.VISIT_START_DATETIME, a.VISIT_END_DATETIME,
-        b.measurement_datetime, c.drug_exposure_start_datetime, c.drug_concept_id, c.drug_source_value,
+        select distinct a.person_id, a.visit_occurrence_id, a.VISIT_START_DATETIME, a.VISIT_END_DATETIME, a.VISIT_START_DATE, a.VISIT_END_DATE,
+        b.measurement_datetime, c.drug_exposure_start_datetime, c.drug_exposure_start_date, c.drug_concept_id, c.drug_source_value,
         rank()over(partition by a.person_id order by c.drug_exposure_start_datetime, b.measurement_datetime) rank
         
         -- 입원
         from ( 
-            select person_id, visit_occurrence_id, VISIT_START_DATETIME, VISIT_END_DATETIME
+            select person_id, visit_occurrence_id, VISIT_START_DATETIME, VISIT_END_DATETIME,VISIT_START_DATE,VISIT_END_DATE
             from CDM_2021.origin_VISIT_occurrence
             where visit_concept_id='9201'
         ) a
@@ -33,7 +33,7 @@ create table cdm_t1 as (
         
         --발열이후 6시간 이내 AAP, PAA를 IV투여가 된 환자
         join (
-            select person_id, visit_occurrence_id, drug_exposure_start_datetime, drug_concept_id, drug_source_value
+            select person_id, visit_occurrence_id, drug_exposure_start_datetime, drug_exposure_start_date, drug_concept_id, drug_source_value
             from CDM_2021.origin_DRUG_EXPOSURE
             where ROUTE_CONCEPT_ID = '4171047' and stop_reason is null
             and drug_exposure_start_datetime > '2011-12-31'
@@ -55,10 +55,10 @@ create table cdm_t1 as (
     and aa.drug_exposure_start_datetime < cc.measurement_datetime
     and cc.measurement_datetime - aa.drug_exposure_start_datetime < '06:00:00'
     and (cc.mbp is not null or cc.sbp is not null)
-    
-    --환자당 첫번째 사건
-    where aa.rank=1
-    
+
+    where aa.rank=1 --환자당 첫번째 사건
+    and aa.VISIT_END_DATE-aa.VISIT_START_DATE <=90   --재원기간 <= 90일
+    and aa.drug_exposure_start_date-aa.VISIT_START_DATE <=7 --입원 후 7일내 index약물   
 )
 
 
@@ -152,3 +152,5 @@ create table cdm_t2 as (
 
     where aa.rank=1
 )
+
+
