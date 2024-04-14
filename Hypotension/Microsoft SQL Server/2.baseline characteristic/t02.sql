@@ -18,7 +18,7 @@ SELECT
     a.person_id,
     a.visit_occurrence_id,
     CASE
-        WHEN LEN(c.condition_source_value) = 12 THEN SUBSTRING(c.condition_source_value, 8, 3)
+        WHEN LEN(c.condition_source_value) = 12 THEN SUBSTRING(c.condition_source_value, 8, 4)
         ELSE SUBSTRING(c.condition_source_value, 1, 3)
     END AS condition_source_value
 FROM

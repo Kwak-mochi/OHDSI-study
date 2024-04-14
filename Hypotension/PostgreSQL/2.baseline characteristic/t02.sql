@@ -12,7 +12,7 @@ and b.visit_start_datetime < a.visit_start_datetime
 )
 
 select a.group_hypo, a.person_id, a.visit_occurrence_id,
-case when length(c.condition_source_value) = 12 then substr(c.condition_source_value,8,3) else substr(condition_source_value,1,3) end as condition_source_value 
+case when length(c.condition_source_value) = 12 then substr(c.condition_source_value,8,3) else substr(condition_source_value,1,4) end as condition_source_value 
 
 from cdm_t2 a
 
