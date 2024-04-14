@@ -9,7 +9,7 @@ WITH before_visit_condition AS (
         b.visit_occurrence_id,
         CASE
             WHEN LENGTH(c.condition_source_value) = 12 THEN SUBSTRING(c.condition_source_value, 8, 3)
-            ELSE SUBSTRING(c.condition_source_value, 1, 3)
+            ELSE SUBSTRING(c.condition_source_value, 1, 4)
         END AS condition_source_value
     FROM
         cdm_t2 a
