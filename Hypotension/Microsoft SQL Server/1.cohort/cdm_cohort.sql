@@ -169,3 +169,6 @@ FROM
                             b.drug_source_value AS drug_source_value_bf,
                             b.quantity AS quantity_bf,
                             RANK() OVER (PARTITION BY a.person_id ORDER BY b.drug_exposure_start_datetime DESC, b.quantity DESC, b.drug_concept_id) AS rank
+
+--save : raw.csv
+select * from cdm_t2;

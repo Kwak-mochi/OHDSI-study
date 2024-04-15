@@ -153,4 +153,5 @@ create table cdm_t2 as (
     where aa.rank=1
 )
 
-
+--save : raw.csv
+select * from cdm_t2
