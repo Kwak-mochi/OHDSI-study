@@ -48,13 +48,13 @@ data_raw<-inner_join(data_raw, subset(t07, select= c(person_id,ph_48,pco2_48,po2
 #t08
 data_raw<-inner_join(data_raw, subset(t08, select= c(person_id,dead_hosp,visit_to_drug, drug_to_end, visit_to_end)), by='person_id')
 
-data_raw[data_raw$person_id>0, "re_persion_id"]=paste0("id_",data_raw$person_id)
+data_raw[data_raw$person_id>0, "re_person_id"]=paste0("id_",data_raw$person_id)
 data_raw <- subset(data_raw, select= -c(person_id))
 
 #data check
 #mytable(data_raw)
 #summary(data_raw)
-#mytable(group_hypo~.-re_persion_id, data=data_raw)
+#mytable(group_hypo~.-re_person_id, data=data_raw)
 
 
 
@@ -86,7 +86,7 @@ data1<-ch_minmax(data1, "spo2", 50, 100)
 
 #data check
 #mytable(data1)
-#mytable(group_hypo~.-re_persion_id, data=data1)
+#mytable(group_hypo~.-re_person_id, data=data1)
 #summary(data1)
 
 #결측치 시각화
@@ -96,7 +96,7 @@ naniar::gg_miss_upset(data1)
 
 ##imputation : data2
 library(miceRanger)
-data1_cut <- subset(data1, select= c(re_persion_id, group_hypo, age, sex, BMI, CCI, index_year, surgery_bfiv, sepsis, icu, drug_bfiv, 
+data1_cut <- subset(data1, select= c(re_person_id, group_hypo, age, sex, BMI, CCI, index_year, surgery_bfiv, sepsis, icu, drug_bfiv, 
                                      hypertension, diabetes_mellitus, heart_failure, chronic_kidney_disease, liver_disease, cerebrovascular, 
                                      metastatic_cancer, hematologic_malignancy, solid_tumor, mbp, pr, rr, bt, spo2,
                                      crp_48, wbc_48, hemoglobin_48, platelet_48, creatinine_48, bilirubin_48, antibio))
@@ -108,10 +108,10 @@ names(data2_cut) <- names(data1_cut)
 data2<-inner_join(data2_cut, subset(data1, select= -c(group_hypo, age, sex, BMI, CCI, index_year, surgery_bfiv, sepsis, icu, drug_bfiv, 
                                                       hypertension, diabetes_mellitus, heart_failure, chronic_kidney_disease, liver_disease, cerebrovascular,
                                                       metastatic_cancer,hematologic_malignancy, solid_tumor, mbp, pr, rr, bt, spo2,
-                                                      crp_48, wbc_48, hemoglobin_48, platelet_48, creatinine_48, bilirubin_48, antibio)), by='re_persion_id')
+                                                      crp_48, wbc_48, hemoglobin_48, platelet_48, creatinine_48, bilirubin_48, antibio)), by='re_person_id')
 #data check
 #mytable(data2)
-#mytable(group_hypo~.-re_persion_id, data=data2)
+#mytable(group_hypo~.-re_person_id, data=data2)
 #summary(data2)
 
 
@@ -140,10 +140,10 @@ data3_cut <- subset(data3_cut, select = -c(distance, weights, subclass))
 data3<-inner_join(data3_cut, subset(data1, select= -c(group_hypo, age, sex, BMI, CCI, index_year, surgery_bfiv, sepsis, icu, drug_bfiv, 
                                                       hypertension, diabetes_mellitus, heart_failure, chronic_kidney_disease, liver_disease, cerebrovascular, metastatic_cancer,
                                                       hematologic_malignancy, solid_tumor, mbp, pr, rr, bt, spo2,
-                                                      crp_48, wbc_48, hemoglobin_48, platelet_48, creatinine_48, bilirubin_48, antibio)), by='re_persion_id')
+                                                      crp_48, wbc_48, hemoglobin_48, platelet_48, creatinine_48, bilirubin_48, antibio)), by='re_person_id')
   
 #ps분포확인plot (psm 전)
-mod <- glm(group_hypo~. -re_persion_id, family=binomial, data=data2_cut)
+mod <- glm(group_hypo~. -re_person_id, family=binomial, data=data2_cut)
 #summary(mod)
 data2_cut_plot <- data.frame(score=predict(mod, type='response'), data2_cut)
 data2_cut_plot %>%
@@ -152,7 +152,7 @@ data2_cut_plot %>%
   geom_histogram(color='white', position = 'dodge')+theme_bw()
 
 #ps분포확인plot (psm 후)
-mod <- glm(group_hypo~. -re_persion_id, family=binomial, data=data3_cut)
+mod <- glm(group_hypo~. -re_person_id, family=binomial, data=data3_cut)
 #summary(mod)
 data3_cut_plot <- data.frame(score=predict(mod, type='response'), data3_cut)
 data3_cut_plot %>%
@@ -163,11 +163,15 @@ data3_cut_plot %>%
 
 #data check
 #mytable(data3)
-#mytable(group_hypo~.-re_persion_id, data=data3)
+#mytable(group_hypo~.-re_person_id, data=data3)
 #summary(data3)
 
 
 ####dataset save
-write.csv(data2, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/data2.csv")
-write.csv(data3, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/dataset.csv")
+raw[raw$person_id>0, "re_person_id"]=paste0("id_",raw$person_id)
+data_set<-inner_join(subset(raw, select=-c(group_hypo)), data3, by='re_person_id')
 
+write.csv(data1, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/data1.csv")
+write.csv(data2, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/data2.csv")
+write.csv(data3, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/data3.csv")
+write.csv(data_set, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/dataset.csv")
