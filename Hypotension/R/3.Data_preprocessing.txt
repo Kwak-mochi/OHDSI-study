@@ -171,7 +171,7 @@ data3_cut_plot %>%
 raw[raw$person_id>0, "re_person_id"]=paste0("id_",raw$person_id)
 data_set<-inner_join(subset(raw, select=-c(group_hypo)), data3, by='re_person_id')
 
-write.csv(data1, file="data1.csv")
-write.csv(data2, file="data2.csv")
-write.csv(data3, file="data3.csv")
-write.csv(data_set, file="dataset.csv")
+write.csv(data1, file="data1.csv", row.names = F)
+write.csv(data2, file="data2.csv", row.names = F)
+write.csv(data3, file="data3.csv", row.names = F)
+write.csv(data_set, file="dataset.csv", row.names = F)
