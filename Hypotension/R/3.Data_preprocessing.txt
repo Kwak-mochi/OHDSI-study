@@ -10,16 +10,16 @@ library(moonBook)
 library(readr)
 library(dplyr)
 
-raw <- read_csv('E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/raw.csv', col_names = T,na=c("", "NULL"))
+raw <- read_csv('raw.csv', col_names = T,na=c("", "NULL"))
 
-t01 <- read_csv('E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/t01.csv', col_names = T,na=c("", "NULL"))
-t02 <- read_csv('E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/t02_cci.csv', col_names = T,na=c("", "NULL"))
-t03 <- read_csv('E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/t03.csv', col_names = T,na=c("", "NULL"))
-t04 <- read_csv('E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/t04.csv', col_names = T)
-t05 <- read_csv('E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/t05.csv', col_names = T)
-t06 <- read_csv('E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/t06.csv', col_names = T,na=c("", "NULL"))
-t07 <- read_csv('E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/t07.csv', col_names = T,na=c("", "NULL"))
-t08 <- read_csv('E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/t08.csv', col_names = T,na=c("", "NULL"))
+t01 <- read_csv('t01.csv', col_names = T,na=c("", "NULL"))
+t02 <- read_csv('t02_cci.csv', col_names = T,na=c("", "NULL"))
+t03 <- read_csv('t03.csv', col_names = T,na=c("", "NULL"))
+t04 <- read_csv('t04.csv', col_names = T)
+t05 <- read_csv('t05.csv', col_names = T)
+t06 <- read_csv('t06.csv', col_names = T,na=c("", "NULL"))
+t07 <- read_csv('t07.csv', col_names = T,na=c("", "NULL"))
+t08 <- read_csv('t08.csv', col_names = T,na=c("", "NULL"))
 
 ##table merge : data_raw
 #t01
@@ -171,7 +171,7 @@ data3_cut_plot %>%
 raw[raw$person_id>0, "re_person_id"]=paste0("id_",raw$person_id)
 data_set<-inner_join(subset(raw, select=-c(group_hypo)), data3, by='re_person_id')
 
-write.csv(data1, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/data1.csv")
-write.csv(data2, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/data2.csv")
-write.csv(data3, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/data3.csv")
-write.csv(data_set, file="E:/Users/DKKI002/Desktop/mimic/baseline table_cdm_202404/dataset.csv")
+write.csv(data1, file="data1.csv")
+write.csv(data2, file="data2.csv")
+write.csv(data3, file="data3.csv")
+write.csv(data_set, file="dataset.csv")
