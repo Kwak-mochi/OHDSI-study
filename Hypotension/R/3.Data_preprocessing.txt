@@ -119,6 +119,7 @@ data2<-inner_join(data2_cut, subset(data1, select= -c(group_hypo, age, sex, BMI,
 #### step 3. Propensity Score matching
 library(MatchIt)
 library(ggplot2)
+library(cobalt)
 data2_cut$group_hypo <- ifelse(data2_cut$group_hypo=='control',0,1)
 
 ##psm : data3
@@ -135,6 +136,7 @@ matching <- matchit(group_hypo ~age+sex+BMI+CCI+index_year+surgery_bfiv+sepsis+i
 
 #SMD check and merge
 summary(matching)
+love.plot(matching)
 data3_cut <- match.data(matching)
 data3_cut <- subset(data3_cut, select = -c(distance, weights, subclass))
 data3<-inner_join(data3_cut, subset(data1, select= -c(group_hypo, age, sex, BMI, CCI, index_year, surgery_bfiv, sepsis, icu, drug_bfiv, 
