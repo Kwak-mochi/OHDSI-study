@@ -172,7 +172,6 @@ data3_cut_plot %>%
 
 ####dataset save
 raw[raw$person_id>0, "re_person_id"]=paste0("id_",raw$person_id)
-data3$group_hypo <- ifelse(data3$group_hypo==0, 'control', 'hypotension')
 data_set<-inner_join(subset(raw, select=-c(group_hypo)), data3, by='re_person_id')
 
 write.csv(data1, file="data1.csv", row.names = F)
