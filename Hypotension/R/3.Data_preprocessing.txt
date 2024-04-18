@@ -39,6 +39,7 @@ data_raw[data_raw$CCI > 2 ,"cci_group"]="cci_3"
 data_raw<-inner_join(data_raw, subset(t03, select= c(person_id, surgery_bfiv, icu, drug_bfiv)), by='person_id')
 #t04
 data_raw<-inner_join(data_raw, subset(t04, select= c(person_id, qsofa, antibio, sepsis)), by='person_id')
+data_raw$qsofa <- ifelse(data_raw$qsofa == 'NULL', 0, data_raw$qsofa)
 #t05
 data_raw<-inner_join(data_raw, subset(t05, select= c(person_id, hypertension, diabetes_mellitus,heart_failure,chronic_kidney_disease,liver_disease,cerebrovascular,metastatic_cancer,hematologic_malignancy,solid_tumor)), by='person_id')
 #t06
