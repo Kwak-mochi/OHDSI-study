@@ -55,11 +55,13 @@ ggforest(fit.coxph)
 ##각각의 subgroup으로 나누어 hazard ratio를 확인하여 forest plot을 그림
 ##subgroup.csv에 Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value, interaction P를 입력
 ##값이 모두 채워진 subgroup.csv를 통해 forest plot을 그림
+library(moonBook)
 
 ##data 준비
 ##subgroup : group_hypotension
 #group_hypotension : All patients에 기입
 surv <- Surv(data3$drug_to_end, data3$dead_hosp=='yes')
+mytable(group_hypo~., data=subset(data3,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 fit.coxph <- coxph(surv ~ group_hypo, data=as.data.frame(data3))
 summary(fit.coxph)
 ggforest(fit.coxph)
@@ -68,6 +70,7 @@ ggforest(fit.coxph)
 #age : age>=에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 data3[data3$age >= 65, "age_g"]="age>=65"
 subgroup <- subset(data3, age_g=="age>=65")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
@@ -75,6 +78,7 @@ ggforest(fit.coxph)
 #age : age<에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 data3[data3$age < 65, "age_g"]="age<65"
 subgroup <- subset(data3, age_g=="age<65")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
@@ -88,12 +92,14 @@ summary(fit.coxph)
 ##subgroup : sex
 #sex : Male에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 subgroup <- subset(data3, sex=="M")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
 
 #sex : Female에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 subgroup <- subset(data3, sex=="F")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
@@ -108,6 +114,7 @@ summary(fit.coxph)
 #CCI : cci>2에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 data3[data3$CCI > 2, "cci_g"]="cci>2"
 subgroup <- subset(data3, cci_g=="cci>2")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
@@ -115,6 +122,7 @@ ggforest(fit.coxph)
 #CCI : cci<=2에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 data3[data3$CCI <= 2, "cci_g"]="cci<=2"
 subgroup <- subset(data3, cci_g=="cci<=2")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
@@ -128,12 +136,14 @@ summary(fit.coxph)
 ##subgroup : sepsis
 #sepsis : yes에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 subgroup <- subset(data3, sepsis=="yes")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
 
 #sepsis : no에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 subgroup <- subset(data3, sepsis=="no")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
@@ -147,12 +157,14 @@ summary(fit.coxph)
 ##subgroup : Used Vasopressin before Index IV
 #Used Vasopressin before Index IV : yes에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 subgroup <- subset(data3, drug_bfiv=="yes")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
 
 #Used Vasopressin before Index IV : no에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 subgroup <- subset(data3, drug_bfiv=="no")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
@@ -166,12 +178,14 @@ summary(fit.coxph)
 ##subgroup : Index IV in ICU
 #Index IV in ICU : yes에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 subgroup <- subset(data3, icu=="yes")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
 
 #Index IV in ICU : no에 기입(Hypotension N, Control N, Hazard Ratio, Lower .95, Upper .95, P-value)
 subgroup <- subset(data3, icu=="no")
+mytable(group_hypo~., data=subset(subgroup,select = c(group_hypo,dead_hosp)))#in hospital mortality 확인 
 surv_sub <- Surv(subgroup$drug_to_end, subgroup$dead_hosp=='yes')
 fit.coxph <- coxph(surv_sub ~ group_hypo, data=as.data.frame(subgroup))
 ggforest(fit.coxph)
@@ -183,8 +197,6 @@ summary(fit.coxph)
 
 
 #save result -> subgroup.csv
-
-##forest plot
 library(forestploter)
 sub<- read_csv('subgroup.csv', col_names = T)
 
